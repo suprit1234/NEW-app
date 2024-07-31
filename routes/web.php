@@ -12,7 +12,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,5 +75,8 @@ Route::middleware('auth')->group(function () {
 Route::get('posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('posts/data', [PostController::class, 'getPosts'])->name('posts.data');
 Route::post('posts', [PostController::class, 'store'])->name('posts.store');
+Route::get('posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::put('posts/{id}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 require __DIR__.'/auth.php';

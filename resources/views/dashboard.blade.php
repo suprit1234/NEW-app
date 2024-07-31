@@ -15,6 +15,5 @@
         </div>
     </div>
     <div class="container">
-        <a href="{{ route('posts.index') }}">To create a Table</a>
 
 </x-app-layout>

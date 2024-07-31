@@ -8,7 +8,9 @@
 <body>
     <div class="container">
         <h1>Posts</h1>
-
+            <a href="{{ route('dashboard') }}" style="">
+                Go back
+            </a>
         <!-- Add Post Form -->
         <form id="add-post-form" method="POST" action="{{ route('posts.store') }}">
             @csrf
@@ -32,6 +34,7 @@
                     <th>Content</th>
                     <th>Created At</th>
                     <th>Updated At</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
         </table>
@@ -53,13 +56,25 @@
                     { data: 'post_title', name: 'title' },
                     { data: 'post_content', name: 'content' },
                     { data: 'post_created_at', name: 'created_at' },
-                    { data: 'post_updated_at', name: 'updated_at' }
+                    { data: 'post_updated_at', name: 'updated_at' },
+                    { data: 'actions', name: 'actions', oderable:false, searchable: false}
+                ],
+                columnDefs: [
+                    {
+                        targets: -1,
+                        render: function(data, type, row) {
+                            return `
+                                <a href="{{ url('posts') }}/${row.post_id}/edit" class="btn btn-info btn-sm">Edit</a>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="${row.post_id}">Delete</button>
+                            `;
+                        }
+                    }
                 ]
+                
             });
 
             $('#add-post-form').on('submit', function(e) {
                 e.preventDefault();
-
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('posts.store') }}',
@@ -68,11 +83,32 @@
                         $('#add-post-form')[0].reset();
                         table.ajax.reload();
                     },
-                    error: function(response) { 
+                    error: function(response) {
                         console.log('Error:', response);
                     }
                 });
             });
+
+            // Handle delete button click
+            $('#posts-table').on('click', '.delete-btn', function() {
+                var postId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this post?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '{{ url('posts') }}/' + postId,
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            table.ajax.reload();
+                        },
+                        error: function(response) {
+                            console.log('Error:', response);
+                        }
+                    });
+                }
+            });
         });
+        
     </script>
 </html>
