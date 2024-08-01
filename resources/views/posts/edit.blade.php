@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Edit Post</h1>
+        <h1>Edit Post a liy</h1>
 
         <form method="POST" action="{{ route('posts.update', $post->id) }}">
             @csrf
